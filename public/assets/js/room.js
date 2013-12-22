@@ -1,38 +1,41 @@
 var peer = new Peer({
-  key: '6165842a-5c0d-11e3-b514-75d3313b9d05',
-  //key: '4304447a-5d8a-11e3-aced-fba866690e9f',
+  key: '6165842a-5c0d-11e3-b514-75d3313b9d05',  // ローカル
+  //key: '4304447a-5d8a-11e3-aced-fba866690e9f', // 本番用
 });
 
-// TODO: 統合
 var connectedPeers = {};
 var member_list = {};
 
+var name;
+
+/**
+ * peer イベント
+ */
 peer.on('open', function(id){
   $('#pid').text(id);
 });
-
-// Await connections from others
 peer.on('connection', connect);
 
 function connect(c) {
   if (c.label === 'chat') {
     var member_box = $('#member');
     var messages = $('#messages');
-    member_list[c.peer] = c.metadata['message'];
+    //c.metadata['user_name'].push(name);
+    //member_list[c.peer] = c.metadata['user_name'][0];
     messages.append('<div><span class="peer">' + c.peer + '</span>: connect</div>');
 
     c.on('data', function(data) {
       messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data + '</div>');
     });
     c.on('close', function() {
-      alert(c.peer + ' has left the chat.');
+      alert(member_list[c.peer] + ' has left the chat.');
       delete connectedPeers[c.peer];
       delete member_list[c.peer];
     });
   } else if (c.label === 'file') {
     c.on('data', function(data) {
       if (data.constructor === ArrayBuffer) {
-        var dataView = new Uint8Array(data);
+        var dataView = new Uint8Array(data); 
         var dataBlob = new Blob([dataView]);
         var url = window.URL.createObjectURL(dataBlob);
         $('#messages').append('<div><span class="file">' +
@@ -43,6 +46,7 @@ function connect(c) {
 }
 
 $(document).ready(function() {
+  name = $('#user_name').text();
   var box = $('#file_box');
   box.on('dragenter', doNothing);
   box.on('dragover', doNothing);
@@ -65,21 +69,26 @@ $(document).ready(function() {
   $('#connect').click(function() {
     requestedPeer = $('#rid').val();
     if (!connectedPeers[requestedPeer]) {
-      // Create 2 connections, one labelled chat and another labelled file.
-      var c = peer.connect(requestedPeer, {
+      // chat 用
+      var chat = peer.connect(requestedPeer, {
         label: 'chat',
-        serialization: 'none',
-        metadata: {message: $('#user_name').text()}
+        serialization: 'json',
+        //metadata: {user_name: [name]}
       });
-      c.on('open', function() {
-        connect(c);
+      chat.on('open', function() {
+        connect(chat);
       });
-      c.on('error', function(err) { alert(err); });
-      var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
-      f.on('open', function() {
-        connect(f);
+      chat.on('error', function(err) { alert(err); });
+      
+      // file 用
+      var file = peer.connect(requestedPeer, {
+        label: 'file',
+        //metadata: {user_name: [name]},
+        reliable: true });
+      file.on('open', function() {
+        connect(file);
       });
-      f.on('error', function(err) { alert(err); });
+      file.on('error', function(err) { alert(err); });
     }
     connectedPeers[requestedPeer] = 1;
   });
