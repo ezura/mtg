@@ -1,8 +1,17 @@
 <?php
 class Controller_Room extends Controller
 {
+	/*public function before()
+	{
+		if ( is_null(Session::get('user')) )
+			Response::redirect('entrance/index');
+	}*/
+	
 	public function action_index()
 	{
-		return Response::forge(View::forge('room/index'));
+		$data = array('name' => Input::post('name'),
+									'user' => Input::post('user'));
+		// login の action_before でチェック 
+		return Response::forge(View::forge('room/index', $data));
 	}
 }

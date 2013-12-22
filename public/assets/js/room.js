@@ -1,14 +1,12 @@
 var peer = new Peer({
   key: '6165842a-5c0d-11e3-b514-75d3313b9d05',
-  // Set a logging function:
-  logFunction: function() {
-    var copy = Array.prototype.slice.call(arguments).join(' ');
-    $('.log').append(copy + '<br>');
-  }
+  //key: '4304447a-5d8a-11e3-aced-fba866690e9f',
 });
-var connectedPeers = {};
 
-// Show this peer's ID.
+// TODO: 統合
+var connectedPeers = {};
+var member_list = {};
+
 peer.on('open', function(id){
   $('#pid').text(id);
 });
@@ -16,56 +14,36 @@ peer.on('open', function(id){
 // Await connections from others
 peer.on('connection', connect);
 
-// Handle a connection object.
 function connect(c) {
-  // Handle a chat connection.
   if (c.label === 'chat') {
-    var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
-    var header = $('<h1></h1>').html('Chat with <strong>' + c.peer + '</strong>');
-    var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
-    chatbox.append(header);
-    chatbox.append(messages);
- 
-    // Select connection handler.
-    chatbox.on('click', function() {
-      if ($(this).attr('class').indexOf('active') === -1) {
-        $(this).addClass('active');
-      } else {
-        $(this).removeClass('active');
-      }
-    });
-    $('.filler').hide();
-    $('#connections').append(chatbox);
+    var member_box = $('#member');
+    var messages = $('#messages');
+    member_list[c.peer] = c.metadata['message'];
+    messages.append('<div><span class="peer">' + c.peer + '</span>: connect</div>');
 
     c.on('data', function(data) {
-      messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
-        '</div>');
-        });
-        c.on('close', function() {
-          alert(c.peer + ' has left the chat.');
-          chatbox.remove();
-          if ($('.connection').length === 0) {
-            $('.filler').show();
-          }
-          delete connectedPeers[c.peer];
-        });
+      messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data + '</div>');
+    });
+    c.on('close', function() {
+      alert(c.peer + ' has left the chat.');
+      delete connectedPeers[c.peer];
+      delete member_list[c.peer];
+    });
   } else if (c.label === 'file') {
     c.on('data', function(data) {
-      // If we're getting a file, create a URL for it.
       if (data.constructor === ArrayBuffer) {
         var dataView = new Uint8Array(data);
         var dataBlob = new Blob([dataView]);
         var url = window.URL.createObjectURL(dataBlob);
-        $('#' + c.peer).find('.messages').append('<div><span class="file">' +
-            c.peer + ' has sent you a <a target="_blank" href="' + url + '">file</a>.</span></div>');
+        $('#messages').append('<div><span class="file">' +
+            member_list[c.peer] + 'が<a target="_blank" href="' + url + '">file</a>を送信しました</span></div>');
       }
     });
   }
 }
 
 $(document).ready(function() {
-  // Prepare file drop box.
-  var box = $('#box');
+  var box = $('#file_box');
   box.on('dragenter', doNothing);
   box.on('dragover', doNothing);
   box.on('drop', function(e){
@@ -74,7 +52,7 @@ $(document).ready(function() {
     eachActiveConnection(function(c, $c) {
       if (c.label === 'file') {
         c.send(file);
-        $c.find('.messages').append('<div><span class="file">You sent a file.</span></div>');
+        $('#messages').append('<div><span class="file">You sent a file.</span></div>');
       }
     });
   });
@@ -91,7 +69,7 @@ $(document).ready(function() {
       var c = peer.connect(requestedPeer, {
         label: 'chat',
         serialization: 'none',
-        metadata: {message: 'hi i want to chat with you!'}
+        metadata: {message: $('#user_name').text()}
       });
       c.on('open', function() {
         connect(c);
@@ -113,49 +91,60 @@ $(document).ready(function() {
     });
   });
 
-  // Send a chat message to all active connections.
-  $('#send').submit(function(e) {
+  $('#chat_form').submit(function(e) {
     e.preventDefault();
     // For each active connection, send the message.
     var msg = $('#text').val();
     eachActiveConnection(function(c, $c) {
       if (c.label === 'chat') {
         c.send(msg);
-        $c.find('.messages').append('<div><span class="you">You: </span>' + msg
-          + '</div>');
+        $('#messages').append('<div><span class="you">You: </span>' + msg + '</div>');
       }
     });
     $('#text').val('');
     $('#text').focus();
   });
 
-  // Goes through each active peer and calls FN on its connections.
   function eachActiveConnection(fn) {
-    var actives = $('.active');
     var checkedIds = {};
-    actives.each(function() {
-      var peerId = $(this).attr('id');
-
-      if (!checkedIds[peerId]) {
-        var conns = peer.connections[peerId];
+    for(key in member_list) {
+      console.log(key);
+      if (!checkedIds[key]) {
+        var conns = peer.connections[key];
         for (var i = 0, ii = conns.length; i < ii; i += 1) {
           var conn = conns[i];
           fn(conn, $(this));
         }
       }
-
-      checkedIds[peerId] = 1;
-    });
+      checkedIds[key] = 1;
+    }
   }
-
-  // Show browser version
-  $('#browsers').text(navigator.userAgent);
 });
-
-// Make sure things clean up properly.
 
 window.onunload = window.onbeforeunload = function(e) {
   if (!!peer && !peer.destroyed) {
     peer.destroy();
   }
 };
+
+/**
+ * 音声
+ */
+/* ドキュメントには var recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+ * って書いてあるけど、これだと SpeechRecognition オブジェクトが生成されない
+ */
+var recognition = window.SpeechRecognition || new webkitSpeechRecognition();
+recognition.continuous = false;   // 使い勝手に応じて変更
+recognition.lang = "ja-JP";
+recognition.onresult = function(event) {
+  var length = event.results.length;
+  var word = event.results[length-1][0].transcript;
+  $("#text").val(word);;
+}
+
+function startSpeech() {
+  recognition.start();
+}
+function stopSpeech() {
+  recognition.stop();
+}

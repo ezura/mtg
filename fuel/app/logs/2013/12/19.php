@@ -1,0 +1,32 @@
+<?php defined('COREPATH') or exit('No direct script access allowed'); ?>
+
+WARNING - 2013-12-19 00:06:57 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:13:11 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:13:15 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+ERROR - 2013-12-19 00:13:15 --> Error - Could not find asset: entrace.css in C:\xampp\htdocs\mtg\fuel\core\classes\asset\instance.php on line 256
+WARNING - 2013-12-19 00:16:12 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+ERROR - 2013-12-19 00:16:12 --> Error - Could not find asset: entrace.css in C:\xampp\htdocs\mtg\fuel\core\classes\asset\instance.php on line 256
+WARNING - 2013-12-19 00:18:33 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+ERROR - 2013-12-19 00:18:33 --> Error - Could not find asset: entrace.css in C:\xampp\htdocs\mtg\fuel\core\classes\asset\instance.php on line 256
+WARNING - 2013-12-19 00:18:36 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+ERROR - 2013-12-19 00:18:36 --> Error - Could not find asset: entrace.css in C:\xampp\htdocs\mtg\fuel\core\classes\asset\instance.php on line 256
+WARNING - 2013-12-19 00:19:14 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:20:23 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:21:36 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:21:56 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:22:16 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:22:17 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:23:17 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:24:01 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:24:17 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:24:31 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:25:19 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:28:56 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:29:01 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:29:44 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:30:41 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:31:04 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 00:31:08 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 02:05:29 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 02:05:56 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.
+WARNING - 2013-12-19 02:06:07 --> Fuel\Core\Fuel::init - The configured locale en_US is not installed on your system.

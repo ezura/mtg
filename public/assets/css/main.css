@@ -1,0 +1,169 @@
+body {
+	background-color: #ffcccc;
+	color: #000000;
+}
+
+div.sub_content {
+	max-width: 250px;
+	min-width: 50px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#bank {
+	height: 180px;
+	width: 100%;
+	position: relative;
+}
+
+img.butasan {
+	width: 80px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.coin {
+	position: absolute;
+	top: 20px;
+	left: 115px;
+	padding: 5px;
+	background-color: gold;
+	border-style: none;
+	-moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	box-shadow: 
+	0px 0px 1px #fff, 
+	0px 0px 10px yellow, 
+	0px 0px 20px yellow, 
+	0px 0px 30px yellow, 
+	0px 0px 40px yellow;
+}
+
+.hole {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	padding: 5px;
+	background-color: #000;
+	border-style: none;
+	-moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+	border-radius: 50%;
+	width: 60px;
+	height: 15px;
+}
+
+.butasan.pep-dpa {
+	height: 90px;
+	-webkit-animation-name:updown;
+  -webkit-animation-duration:0.5s;
+  -webkit-animation-iteration-count:infinite;
+	-moz-animation-name:updown;
+  -moz-animation-duration:0.5s;
+  -moz-animation-iteration-count:infinite;
+	-o-animation-name:updown;
+  -o-animation-duration:0.5s;
+  -o-animation-iteration-count:infinite;
+	--animation-name:updown;
+  --animation-duration:0.5s;
+  --animation-iteration-count:infinite;
+	animation-name:updown;
+  animation-duration:0.5s;
+  animation-iteration-count:infinite;
+}
+
+.hole.pep-dpa {
+	height: 40px;
+	width: 70px;
+}
+
+@-webkit-keyframes  updown {
+  0% {
+    bottom:0;
+  }
+  70% {
+    bottom:15px;
+  }
+  100% {
+    bottom:0;
+  }
+}
+
+@-moz-keyframes  updown {
+  0% {
+    bottom:0;
+  }
+  75% {
+    bottom:15px;
+  }
+  100% {
+    bottom:0;
+  }
+}
+
+@-o-keyframes  updown {
+  0% {
+    bottom:0;
+  }
+  75% {
+    bottom:15px;
+  }
+  100% {
+    bottom:0;
+  }
+}
+
+@--keyframes  updown {
+  0% {
+    bottom:0;
+  }
+  75% {
+    bottom:15px;
+  }
+  100% {
+    bottom:0;
+  }
+}
+
+@keyframes  updown {
+  0% {
+    bottom:0;
+  }
+  75% {
+    bottom:15px;
+  }
+  100% {
+    bottom:0;
+  }
+}
+
+.sayrap {
+	position: absolute;
+	bottom: 5px;
+	right: 0px;
+}
+
+.say {
+	background-color:#FDF5E6;
+	border-radius:5px;
+	position:relative;
+	height: 65px;
+	width: 143px;
+	padding: 5px 7px;
+}
+ 
+.say:after {
+	border:10px solid transparent;
+	border-right-color:#FDF5E6;
+	border-left-width:0;
+	left:-10px;
+	content:"";
+	display:block;
+	top:30px;
+	position:absolute;
+	width:0;
+}
