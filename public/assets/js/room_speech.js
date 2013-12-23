@@ -11,6 +11,7 @@ recognition.onresult = function(event) {
   var length = event.results.length;
   var word = event.results[length-1][0].transcript;
   $("#text").val(word);;
+  $('#text').focus();
 }
 
 function startSpeech() {

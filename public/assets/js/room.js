@@ -1,11 +1,10 @@
 var peer = new Peer({
-  //key: '6165842a-5c0d-11e3-b514-75d3313b9d05',  // ローカル
+  key: '6165842a-5c0d-11e3-b514-75d3313b9d05',  // ローカル
   //key: '4304447a-5d8a-11e3-aced-fba866690e9f', // 本番用
-  key: 'cb1f407a-65f6-11e3-b1a3-8df577be8f85'  // meeting-ez.azurewebsites.net
+  //key: 'cb1f407a-65f6-11e3-b1a3-8df577be8f85'  // meeting-ez.azurewebsites.net
 });
 
-var connectedPeers = {};
-var member_list = {};
+var connected_peers = {};
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 navigator.getUserMedia({audio: true, video: false},
         function(stream){
@@ -20,35 +19,30 @@ navigator.getUserMedia({audio: true, video: false},
 peer.on('open', function(id){
   $('#pid').text(id);
 });
+
 peer.on('connection', connect);
 
-peer.on('call', function(call){
-  call.answer(window.localStream);
-  if (window.existingCall) window.existingCall.close();
-  call.on('stream', function(stream){
-    console.log("call.on('stream', function(stream)");
-    $('#call').prop('src', URL.createObjectURL(stream));
-  });
-});
+peer.on('call', audioCall);
+
 peer.on('error', function(err){
   alert(err.message);
 });
 
+/**
+ * チャットとファイル通信
+ */
 function connect(c) {
   if (c.label === 'chat') {
     var member_box = $('#member');
     var messages = $('#messages');
-    //c.metadata['user_name'].push(name);
-    //member_list[c.peer] = c.metadata['user_name'][0];
     messages.append('<div><span class="peer">' + c.peer + '</span>: connect</div>');
+    connected_peers[c.peer] = 1;
 
     c.on('data', function(data) {
       messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data + '</div>');
     });
     c.on('close', function() {
-      alert(member_list[c.peer] + ' has left the chat.');
-      delete connectedPeers[c.peer];
-      delete member_list[c.peer];
+      delete connected_peers[c.peer];
     });
   } else if (c.label === 'file') {
     c.on('data', function(data) {
@@ -57,10 +51,28 @@ function connect(c) {
         var dataBlob = new Blob([dataView]);
         var url = window.URL.createObjectURL(dataBlob);
         $('#messages').append('<div><span class="file">' +
-            member_list[c.peer] + 'が<a target="_blank" href="' + url + '">file</a>を送信しました</span></div>');
+            c.peer + 'が<a target="_blank" href="' + url + '">file</a>を送信しました</span></div>');
       }
     });
   }
+}
+
+/**
+ * 音声データ通信接続時（されたとき）
+ */
+function audioCall(call) {
+  call.answer(window.localStream);
+  setOnCall(call);
+}
+
+/**
+ * call のイベント発生時の動作を設定
+ */
+function setOnCall(call) {
+  call.on('stream', function(stream){
+    console.log("call.on('stream', function(stream)");
+    $('#audio_sec').append('<audio class="' + call.id + '" src="' + URL.createObjectURL(stream) + '" autoplay></audio>');
+  });
 }
 
 $(document).ready(function() {
@@ -83,15 +95,14 @@ $(document).ready(function() {
     e.stopPropagation();
   }
 
-  // Connect to a peer
+  // 他の人との peer 接続開始
   $('#connect').click(function() {
     requestedPeer = $('#rid').val();
-    if (!connectedPeers[requestedPeer]) {
+    if (!connected_peers[requestedPeer]) {
       // chat 用
       var chat = peer.connect(requestedPeer, {
         label: 'chat',
-        serialization: 'json',
-        //metadata: {user_name: [name]}
+        serialization: 'none',
       });
       chat.on('open', function() {
         connect(chat);
@@ -101,7 +112,6 @@ $(document).ready(function() {
       // file 用
       var file = peer.connect(requestedPeer, {
         label: 'file',
-        //metadata: {user_name: [name]},
         reliable: true });
       file.on('open', function() {
         connect(file);
@@ -110,8 +120,9 @@ $(document).ready(function() {
       
       // 通話用
       var call = peer.call(requestedPeer, window.localStream);
+      setOnCall(call);
     }
-    connectedPeers[requestedPeer] = 1;
+    connected_peers[requestedPeer] = 1;
   });
 
   // Close a connection.
@@ -123,12 +134,11 @@ $(document).ready(function() {
 
   $('#chat_form').submit(function(e) {
     e.preventDefault();
-    // For each active connection, send the message.
     var msg = $('#text').val();
+    $('#messages').append('<div><span class="you">You: </span>' + msg + '</div>');
     eachActiveConnection(function(c, $c) {
       if (c.label === 'chat') {
         c.send(msg);
-        $('#messages').append('<div><span class="you">You: </span>' + msg + '</div>');
       }
     });
     $('#text').val('');
@@ -137,7 +147,7 @@ $(document).ready(function() {
 
   function eachActiveConnection(fn) {
     var checkedIds = {};
-    for(key in member_list) {
+    for(key in connected_peers) {
       console.log(key);
       if (!checkedIds[key]) {
         var conns = peer.connections[key];

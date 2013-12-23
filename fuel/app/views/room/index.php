@@ -28,7 +28,6 @@
 			<section class="do_connect">
 				<input class="input_text" type="text" id="rid" placeholder="Someone else's id">
 				<input class="button" type="button" value="Connect" id="connect">
-				<div id="messages"></div>
 			</section>
 			
 			<!-- CSS -->
@@ -43,17 +42,23 @@
 				</div>
 			</section>
 			
+			<!-- チャット -->
+			<section id="message_sec">
+				<div id="messages"></div>
+			</section>
+			
 			<!-- 音声 -->
-			<audio id="call" autoplay></audio>
+			<section id="audio_sec">
+			</section>
 			
 			<!-- chat -->
 			<section id="chat_sec">
 				<div id="form">
 					<form id="chat_form">
 						<input class="input_text" type="text" id="text" placeholder="message" autocomplete="off">
-						<button class="button speech" onclick="startSpeech()"><?php echo Asset::img('speech_b.png', array('height'=>'80%', 'alt'=>'音声入力')); ?></button>
 						<input id="send" class="button" type="submit" value="Send">
 					</form>
+					<button class="button speech" onclick="startSpeech()"><?php echo Asset::img('speech_b.png', array('height'=>'80%', 'alt'=>'音声入力')); ?></button>
 					<!-- ファイル送信 -->
 					<div id="file_box">
 						送りたいファイルをドラッグ
