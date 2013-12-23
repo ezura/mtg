@@ -7,6 +7,12 @@ var peer = new Peer({
 var connectedPeers = {};
 var member_list = {};
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+navigator.getUserMedia({audio: true, video: false},
+        function(stream){
+          console.log("navigator");
+          window.localStream = stream;
+        },
+        function(){console.log("navigator error");});
 
 /**
  * peer イベント
@@ -103,13 +109,7 @@ $(document).ready(function() {
       file.on('error', function(err) { alert(err); });
       
       // 通話用
-      navigator.getUserMedia({audio: true, video: false},
-        function(stream){
-          console.log("navigator");
-          window.localStream = stream;
-          var call = peer.call(requestedPeer, window.localStream);
-        },
-        function(){console.log("navigator error");});
+      var call = peer.call(requestedPeer, window.localStream);
     }
     connectedPeers[requestedPeer] = 1;
   });
