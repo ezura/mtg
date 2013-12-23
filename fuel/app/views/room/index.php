@@ -7,6 +7,7 @@
 	<?php echo Asset::css('room.css'); ?>
 	<?php echo Asset::js('jquery.min.js'); ?>
 	<script src="https://skyway.io/dist/0.3/peer.js"></script>
+	<?php echo Asset::js('api.js'); ?>
 	<?php echo Asset::js('room.js'); ?>
 	<?php echo Asset::js('room_speech.js'); ?>
 </head>
