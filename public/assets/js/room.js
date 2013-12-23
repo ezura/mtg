@@ -5,8 +5,7 @@ var peer = new Peer({
 
 var connectedPeers = {};
 var member_list = {};
-
-var name;
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 /**
  * peer イベント
@@ -15,6 +14,18 @@ peer.on('open', function(id){
   $('#pid').text(id);
 });
 peer.on('connection', connect);
+
+peer.on('call', function(call){
+  call.answer(window.localStream);
+  if (window.existingCall) window.existingCall.close();
+  call.on('stream', function(stream){
+    console.log("call.on('stream', function(stream)");
+    $('#call').prop('src', URL.createObjectURL(stream));
+  });
+});
+peer.on('error', function(err){
+  alert(err.message);
+});
 
 function connect(c) {
   if (c.label === 'chat') {
@@ -89,6 +100,15 @@ $(document).ready(function() {
         connect(file);
       });
       file.on('error', function(err) { alert(err); });
+      
+      // 通話用
+      navigator.getUserMedia({audio: true, video: false},
+        function(stream){
+          console.log("navigator");
+          window.localStream = stream;
+          var call = peer.call(requestedPeer, window.localStream);
+        },
+        function(){console.log("navigator error");});
     }
     connectedPeers[requestedPeer] = 1;
   });

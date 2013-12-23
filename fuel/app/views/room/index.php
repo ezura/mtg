@@ -43,6 +43,10 @@
 				</div>
 			</section>
 			
+			<!-- 音声 -->
+			<audio id="call" autoplay></audio>
+			<audio id="call1" autoplay></audio>
+			
 			<!-- chat -->
 			<section id="chat_sec">
 				<div id="form">
