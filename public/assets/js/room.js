@@ -4,13 +4,21 @@ var peer = new Peer({
 
 var connected_peers = {};
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-navigator.getUserMedia({audio: true, video: false},
+navigator.getUserMedia(
+        {video:{mandatory:{chromeMediaSource:"screen"}}},
         function(stream){
           console.log("navigator");
           window.localStream = stream;
         },
         function(){console.log("navigator error");});
-
+/*
+ navigator.getUserMedia({audio: true, video: false},
+        function(stream){
+          console.log("navigator");
+          window.localStream = stream;
+        },
+        function(){console.log("navigator error");});
+*/
 /**
  * peer イベント
  */
@@ -69,7 +77,7 @@ function audioCall(call) {
 function setOnCall(call) {
   call.on('stream', function(stream){
     console.log("call.on('stream', function(stream)");
-    $('#audio_sec').append('<audio class="' + call.id + '" src="' + URL.createObjectURL(stream) + '" autoplay></audio>');
+    $('#audio_sec').append('<video class="' + call.id + '" src="' + URL.createObjectURL(stream) + '" autoplay></video>');
   });
 }
 
