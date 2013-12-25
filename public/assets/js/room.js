@@ -4,6 +4,7 @@ var peer = new Peer({
 
 var connected_peers = {};
 navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+/*
 navigator.getUserMedia(
         {video:{mandatory:{chromeMediaSource:"screen"}}},
         function(stream){
@@ -11,14 +12,15 @@ navigator.getUserMedia(
           window.localStream = stream;
         },
         function(){console.log("navigator error");});
-/*
+*/
+///*
  navigator.getUserMedia({audio: true, video: false},
         function(stream){
           console.log("navigator");
           window.localStream = stream;
         },
         function(){console.log("navigator error");});
-*/
+//*/
 /**
  * peer イベント
  */
@@ -40,14 +42,11 @@ peer.on('error', function(err){
 function connect(c) {
   if (c.label === 'chat') {
     var member_box = $('#member');
-    //var messages = $('#messages');
     addMessage('<div><span class="peer">' + c.peer + '</span>: connect</div>');
-    //messages.append('<div><span class="peer">' + c.peer + '</span>: connect</div>');
     connected_peers[c.peer] = 1;
 
     c.on('data', function(data) {
-      //messages.append();
-      addMessage('<div><span class="peer">' + c.peer + '</span>: ' + htmlEncode(msg) + '</div>');
+      addMessage('<div><span class="peer">' + c.peer + '</span>: ' + htmlEncode(data) + '</div>');
     });
     c.on('close', function() {
       delete connected_peers[c.peer];
@@ -79,7 +78,8 @@ function audioCall(call) {
 function setOnCall(call) {
   call.on('stream', function(stream){
     console.log("call.on('stream', function(stream)");
-    $('#audio_sec').append('<video class="' + call.id + '" src="' + URL.createObjectURL(stream) + '" autoplay></video>');
+    //$('#audio_sec').append('<video class="' + call.id + '" src="' + URL.createObjectURL(stream) + '" autoplay></video>');
+    $('#audio_sec').append('<audio class="' + call.id + '" src="' + URL.createObjectURL(stream) + '" autoplay></audio>');
   });
 }
 
