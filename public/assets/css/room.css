@@ -34,11 +34,8 @@ input, textarea {
 	padding: 0.2em 0.5em 0.2em 0.5em;
 }
 
-#text 
-	border:solid 1px #ccc;
-	padding: 10px 15px;
-	max-width: 60em;
-	min-width: 30em;
+#text {
+	width: 300px;
 }
 
 #text:active {
@@ -48,6 +45,10 @@ input, textarea {
 .button {
 	border-color: #FFDEAD;
 	background-color: #eee;
+}
+
+#chat_form {
+	display: inline;
 }
 
 .speech {
@@ -74,6 +75,16 @@ input, textarea {
 	border-radius: 5px;
 }
 
-#css_edit > textarea:after {
-	content: "aa"
+#message_sec {
+	text-align: left;
+	max-width: 800px;
+	height: 250px;
+	margin:5px auto 5px auto;
+	border:solid 1px #FFDEAD;
+	padding: 0.2em 0.5em 0.2em 0.5em;
+}
+
+#messages {
+	overflow-y: scroll;
+	height: 100%;
 }

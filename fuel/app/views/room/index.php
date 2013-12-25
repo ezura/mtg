@@ -32,10 +32,12 @@
 			</section>
 			
 			<!-- CSS -->
-			<sction id="css_edit"> <!--  TODO: 中身 -->
+			<!--
+			<sction id="css_edit">
 				<textarea class="input_text edit_area" pleceholder="CSS"></textarea>
 				<input class="button" type="button" value="確定" />
 			</sction>
+			-->
 			
 			<!-- slide -->
 			<section id="slide_sec">

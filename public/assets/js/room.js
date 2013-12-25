@@ -40,12 +40,14 @@ peer.on('error', function(err){
 function connect(c) {
   if (c.label === 'chat') {
     var member_box = $('#member');
-    var messages = $('#messages');
-    messages.append('<div><span class="peer">' + c.peer + '</span>: connect</div>');
+    //var messages = $('#messages');
+    addMessage('<div><span class="peer">' + c.peer + '</span>: connect</div>');
+    //messages.append('<div><span class="peer">' + c.peer + '</span>: connect</div>');
     connected_peers[c.peer] = 1;
 
     c.on('data', function(data) {
-      messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data + '</div>');
+      //messages.append();
+      addMessage('<div><span class="peer">' + c.peer + '</span>: ' + htmlEncode(msg) + '</div>');
     });
     c.on('close', function() {
       delete connected_peers[c.peer];
@@ -56,7 +58,7 @@ function connect(c) {
         var dataView = new Uint8Array(data); 
         var dataBlob = new Blob([dataView]);
         var url = window.URL.createObjectURL(dataBlob);
-        $('#messages').append('<div><span class="file">' +
+        addMessage('<div><span class="file">' +
             c.peer + 'が<a target="_blank" href="' + url + '">file</a>を送信しました</span></div>');
       }
     });
@@ -81,6 +83,16 @@ function setOnCall(call) {
   });
 }
 
+function addMessage(mes) {
+  var messages = $('#messages');
+  messages.append(mes);
+  messages.scrollTop(messages[0].scrollHeight);
+}
+
+function htmlEncode(value){
+  return $('<div/>').text(value).html();
+}
+
 $(document).ready(function() {
   name = $('#user_name').text();
   var box = $('#file_box');
@@ -92,7 +104,7 @@ $(document).ready(function() {
     eachActiveConnection(function(c, $c) {
       if (c.label === 'file') {
         c.send(file);
-        $('#messages').append('<div><span class="file">You sent a file.</span></div>');
+        addMessage('<div><span class="file">You sent a file.</span></div>');
       }
     });
   });
@@ -141,7 +153,7 @@ $(document).ready(function() {
   $('#chat_form').submit(function(e) {
     e.preventDefault();
     var msg = $('#text').val();
-    $('#messages').append('<div><span class="you">You: </span>' + msg + '</div>');
+    addMessage('<div><span class="you">You: </span>' + htmlEncode(msg) + '</div>');
     eachActiveConnection(function(c, $c) {
       if (c.label === 'chat') {
         c.send(msg);
